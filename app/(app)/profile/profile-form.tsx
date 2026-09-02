@@ -1,0 +1,88 @@
+"use client";
+
+import { useRef, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { updateProfile } from "../actions";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import type { Profile } from "@/lib/types";
+
+export function ProfileForm({
+  profile,
+  email,
+}: {
+  profile: Profile;
+  email: string;
+}) {
+  const router = useRouter();
+  const formRef = useRef<HTMLFormElement>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [pending, startTransition] = useTransition();
+  const [previewUrl, setPreviewUrl] = useState<string | null>(profile.avatar_url);
+  const [displayName, setDisplayName] = useState(profile.display_name ?? "");
+
+  const initial = (displayName || email).trim().charAt(0).toUpperCase() || "?";
+
+  function handlePreview(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) setPreviewUrl(URL.createObjectURL(file));
+  }
+
+  function handleSubmit(formData: FormData) {
+    setError(null);
+    startTransition(async () => {
+      const result = await updateProfile(formData);
+      if (result.error) {
+        setError(result.error);
+        return;
+      }
+      toast.success("Profile updated");
+      router.refresh();
+    });
+  }
+
+  return (
+    <form ref={formRef} action={handleSubmit} className="flex flex-col gap-6">
+      <div className="flex items-center gap-4">
+        <Avatar className="h-16 w-16">
+          <AvatarImage src={previewUrl ?? undefined} alt={displayName} />
+          <AvatarFallback className="text-lg">{initial}</AvatarFallback>
+        </Avatar>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="avatar">Avatar</Label>
+          <Input
+            id="avatar"
+            name="avatar"
+            type="file"
+            accept="image/*"
+            onChange={handlePreview}
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="email">Email</Label>
+        <Input id="email" type="email" value={email} disabled />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <Label htmlFor="display_name">Display name</Label>
+        <Input
+          id="display_name"
+          name="display_name"
+          value={displayName}
+          onChange={(e) => setDisplayName(e.target.value)}
+        />
+      </div>
+
+      {error && <p className="text-sm text-destructive">{error}</p>}
+
+      <Button type="submit" disabled={pending} className="self-start">
+        {pending ? "Saving…" : "Save changes"}
+      </Button>
+    </form>
+  );
+}
