@@ -17,6 +17,7 @@ export default function FeedbackPage() {
         </p>
         <Button
           render={<a href={MAILTO} />}
+          nativeButton={false}
           className="mt-5 h-11 w-full rounded-2xl text-base"
         >
           Send feedback
