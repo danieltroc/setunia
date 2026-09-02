@@ -1,7 +1,5 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { formatDate, formatDuration } from "@/lib/format";
 import type { Exercise, PersonalRecord } from "@/lib/types";
 import { LogSetForm } from "./log-set-form";
@@ -46,71 +44,49 @@ export default async function ExerciseDetailPage({
   }, null);
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex items-center gap-3">
+    <div className="flex flex-col gap-8">
+      <div>
         <h1 className="text-2xl font-bold tracking-tight">{exercise.name}</h1>
-        {exercise.owner_id === user!.id && <Badge variant="secondary">Custom</Badge>}
-        {exercise.unit_type === "duration" && <Badge variant="outline">Timed</Badge>}
+        {exercise.owner_id === user!.id && (
+          <span className="text-sm text-primary">Custom exercise</span>
+        )}
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-sm text-muted-foreground">
-            Personal best
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {best ? (
-            <div>
-              <p className="text-3xl font-bold">
-                {exercise.unit_type === "duration"
-                  ? formatDuration(best.duration_seconds ?? 0)
-                  : `${best.weight_kg} kg${best.reps ? ` × ${best.reps}` : ""}`}
-              </p>
-              <p className="text-sm text-muted-foreground">
-                on {formatDate(best.performed_at)}
-              </p>
-            </div>
-          ) : (
-            <p className="text-sm text-muted-foreground">
-              No sets logged yet — log your first one below.
+      <div className="rounded-3xl border border-border bg-gradient-to-b from-primary/10 to-card px-6 py-8 text-center">
+        {best ? (
+          <>
+            <p className="text-6xl font-bold tracking-tight tabular-nums">
+              {exercise.unit_type === "duration"
+                ? formatDuration(best.duration_seconds ?? 0)
+                : best.weight_kg}
             </p>
-          )}
-        </CardContent>
-      </Card>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {exercise.unit_type === "duration"
+                ? "personal best"
+                : `kg${best.reps ? ` × ${best.reps} reps` : ""} · personal best`}
+            </p>
+            <p className="mt-3 text-xs text-muted-foreground">
+              on {formatDate(best.performed_at)}
+            </p>
+          </>
+        ) : (
+          <p className="py-4 text-sm text-muted-foreground">
+            No sets logged yet — log your first one below.
+          </p>
+        )}
+      </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Log a set</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <LogSetForm exerciseId={exercise.id} unitType={exercise.unit_type} />
-        </CardContent>
-      </Card>
+      <LogSetForm exerciseId={exercise.id} unitType={exercise.unit_type} />
 
       {history.length > 1 && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Progress</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ProgressChart records={history} unitType={exercise.unit_type} />
-          </CardContent>
-        </Card>
+        <ProgressChart records={history} unitType={exercise.unit_type} />
       )}
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">History</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <RecordHistory
-            records={history}
-            unitType={exercise.unit_type}
-            exerciseId={exercise.id}
-          />
-        </CardContent>
-      </Card>
+      <RecordHistory
+        records={history}
+        unitType={exercise.unit_type}
+        exerciseId={exercise.id}
+      />
     </div>
   );
 }

@@ -2,17 +2,9 @@
 
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { X } from "lucide-react";
 import { toast } from "sonner";
 import { deletePersonalRecord } from "../../actions";
-import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { formatDate, formatDuration } from "@/lib/format";
 import type { PersonalRecord, UnitType } from "@/lib/types";
 
@@ -40,43 +32,39 @@ export function RecordHistory({
     });
   }
 
-  if (records.length === 0) {
-    return <p className="text-sm text-muted-foreground">No entries yet.</p>;
-  }
-
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Date</TableHead>
-          <TableHead>{unitType === "duration" ? "Duration" : "Weight × Reps"}</TableHead>
-          <TableHead>Notes</TableHead>
-          <TableHead className="w-10" />
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {records.map((record) => (
-          <TableRow key={record.id}>
-            <TableCell>{formatDate(record.performed_at)}</TableCell>
-            <TableCell>
-              {unitType === "duration"
-                ? formatDuration(record.duration_seconds ?? 0)
-                : `${record.weight_kg} kg${record.reps ? ` × ${record.reps}` : ""}`}
-            </TableCell>
-            <TableCell className="text-muted-foreground">{record.notes ?? ""}</TableCell>
-            <TableCell>
-              <Button
-                variant="ghost"
-                size="sm"
+    <div className="flex flex-col gap-3">
+      <p className="text-sm font-semibold">History</p>
+      {records.length === 0 ? (
+        <p className="text-sm text-muted-foreground">No entries yet.</p>
+      ) : (
+        <div className="flex flex-col divide-y divide-border overflow-hidden rounded-3xl border border-border bg-card">
+          {records.map((record) => (
+            <div key={record.id} className="flex items-center gap-3 px-5 py-4">
+              <div className="flex flex-1 flex-col">
+                <span className="font-semibold tabular-nums">
+                  {unitType === "duration"
+                    ? formatDuration(record.duration_seconds ?? 0)
+                    : `${record.weight_kg} kg${record.reps ? ` × ${record.reps}` : ""}`}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {formatDate(record.performed_at)}
+                  {record.notes ? ` · ${record.notes}` : ""}
+                </span>
+              </div>
+              <button
+                type="button"
+                aria-label="Delete entry"
                 disabled={pending}
                 onClick={() => handleDelete(record.id)}
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary hover:text-destructive disabled:opacity-50"
               >
-                Delete
-              </Button>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }

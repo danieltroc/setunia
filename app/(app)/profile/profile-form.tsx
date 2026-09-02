@@ -46,26 +46,30 @@ export function ProfileForm({
 
   return (
     <form ref={formRef} action={handleSubmit} className="flex flex-col gap-6">
-      <div className="flex items-center gap-4">
-        <Avatar className="h-16 w-16">
+      <div className="flex flex-col items-center gap-3 text-center">
+        <Avatar className="h-20 w-20 border border-border">
           <AvatarImage src={previewUrl ?? undefined} alt={displayName} />
-          <AvatarFallback className="text-lg">{initial}</AvatarFallback>
+          <AvatarFallback className="text-2xl">{initial}</AvatarFallback>
         </Avatar>
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="avatar">Avatar</Label>
-          <Input
-            id="avatar"
-            name="avatar"
-            type="file"
-            accept="image/*"
-            onChange={handlePreview}
-          />
-        </div>
+        <Label
+          htmlFor="avatar"
+          className="cursor-pointer text-sm font-medium text-primary"
+        >
+          Change photo
+        </Label>
+        <Input
+          id="avatar"
+          name="avatar"
+          type="file"
+          accept="image/*"
+          onChange={handlePreview}
+          className="hidden"
+        />
       </div>
 
       <div className="flex flex-col gap-2">
         <Label htmlFor="email">Email</Label>
-        <Input id="email" type="email" value={email} disabled />
+        <Input id="email" type="email" value={email} disabled className="rounded-2xl" />
       </div>
 
       <div className="flex flex-col gap-2">
@@ -75,12 +79,13 @@ export function ProfileForm({
           name="display_name"
           value={displayName}
           onChange={(e) => setDisplayName(e.target.value)}
+          className="rounded-2xl"
         />
       </div>
 
       {error && <p className="text-sm text-destructive">{error}</p>}
 
-      <Button type="submit" disabled={pending} className="self-start">
+      <Button type="submit" disabled={pending} className="h-11 rounded-2xl text-base">
         {pending ? "Saving…" : "Save changes"}
       </Button>
     </form>

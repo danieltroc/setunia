@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { Nav } from "./nav";
+import { TopBar } from "./top-bar";
+import { TabBar } from "./tab-bar";
 
 export default async function AppLayout({
   children,
@@ -24,13 +25,14 @@ export default async function AppLayout({
 
   return (
     <div className="flex min-h-svh flex-1 flex-col">
-      <Nav
+      <TopBar
         displayName={profile?.display_name ?? user.email ?? null}
         avatarUrl={profile?.avatar_url ?? null}
       />
-      <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-8">
+      <main className="mx-auto w-full max-w-lg flex-1 px-5 pt-6 pb-28">
         {children}
       </main>
+      <TabBar />
     </div>
   );
 }

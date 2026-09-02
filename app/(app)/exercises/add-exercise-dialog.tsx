@@ -46,7 +46,9 @@ export function AddExerciseDialog() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger render={<Button />}>Add custom exercise</DialogTrigger>
+      <DialogTrigger render={<Button size="sm" className="rounded-full" />}>
+        + Add
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add a custom exercise</DialogTitle>

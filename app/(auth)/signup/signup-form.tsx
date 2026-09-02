@@ -67,6 +67,7 @@ export function SignupForm() {
           placeholder="Optional"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          className="rounded-2xl"
         />
       </div>
       <div className="flex flex-col gap-2">
@@ -78,6 +79,7 @@ export function SignupForm() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          className="rounded-2xl"
         />
       </div>
       <div className="flex flex-col gap-2">
@@ -90,10 +92,11 @@ export function SignupForm() {
           minLength={6}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          className="rounded-2xl"
         />
       </div>
       {error && <p className="text-sm text-destructive">{error}</p>}
-      <Button type="submit" disabled={loading} className="w-full">
+      <Button type="submit" disabled={loading} className="h-11 w-full rounded-2xl text-base">
         {loading ? "Creating account…" : "Sign up"}
       </Button>
     </form>
