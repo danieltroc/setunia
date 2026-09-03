@@ -16,13 +16,18 @@ function today() {
 export function LogSetForm({
   exerciseId,
   unitType,
+  mode,
 }: {
   exerciseId: string;
   unitType: UnitType;
+  /** Only meaningful for weight exercises: "max" hides reps and logs a 1-rep max attempt. */
+  mode?: "max" | "reps";
 }) {
   const formRef = useRef<HTMLFormElement>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const isMax = mode === "max";
+  const idPrefix = mode ? `${mode}-` : "";
 
   function handleSubmit(formData: FormData) {
     setError(null);
@@ -32,7 +37,7 @@ export function LogSetForm({
         setError(result.error);
         return;
       }
-      toast.success("Set logged");
+      toast.success(isMax ? "Max logged" : "Set logged");
       formRef.current?.reset();
     });
   }
@@ -43,9 +48,12 @@ export function LogSetForm({
       action={handleSubmit}
       className="flex flex-col gap-4 rounded-3xl border border-border bg-card p-5"
     >
-      <p className="text-sm font-semibold">Log a set</p>
+      <p className="text-sm font-semibold">
+        {isMax ? "Log a max attempt" : "Log a set"}
+      </p>
       <input type="hidden" name="exercise_id" value={exerciseId} />
       <input type="hidden" name="unit_type" value={unitType} />
+      {mode && <input type="hidden" name="is_max" value={isMax ? "true" : "false"} />}
 
       {unitType === "duration" ? (
         <div className="flex gap-4">
@@ -78,9 +86,9 @@ export function LogSetForm({
       ) : (
         <div className="flex gap-4">
           <div className="flex flex-1 flex-col gap-2">
-            <Label htmlFor="weight_kg">Weight (kg)</Label>
+            <Label htmlFor={`${idPrefix}weight_kg`}>Weight (kg)</Label>
             <Input
-              id="weight_kg"
+              id={`${idPrefix}weight_kg`}
               name="weight_kg"
               type="number"
               min={0}
@@ -89,25 +97,28 @@ export function LogSetForm({
               className="rounded-2xl"
             />
           </div>
-          <div className="flex flex-1 flex-col gap-2">
-            <Label htmlFor="reps">Reps</Label>
-            <Input
-              id="reps"
-              name="reps"
-              type="number"
-              min={1}
-              step={1}
-              placeholder="e.g. 8"
-              className="rounded-2xl"
-            />
-          </div>
+          {!isMax && (
+            <div className="flex flex-1 flex-col gap-2">
+              <Label htmlFor={`${idPrefix}reps`}>Reps</Label>
+              <Input
+                id={`${idPrefix}reps`}
+                name="reps"
+                type="number"
+                min={1}
+                step={1}
+                placeholder="e.g. 8"
+                required
+                className="rounded-2xl"
+              />
+            </div>
+          )}
         </div>
       )}
 
       <div className="flex flex-col gap-2">
-        <Label htmlFor="performed_at">Date</Label>
+        <Label htmlFor={`${idPrefix}performed_at`}>Date</Label>
         <Input
-          id="performed_at"
+          id={`${idPrefix}performed_at`}
           name="performed_at"
           type="date"
           defaultValue={today()}
@@ -117,14 +128,20 @@ export function LogSetForm({
       </div>
 
       <div className="flex flex-col gap-2">
-        <Label htmlFor="notes">Notes</Label>
-        <Textarea id="notes" name="notes" placeholder="Optional" rows={2} className="rounded-2xl" />
+        <Label htmlFor={`${idPrefix}notes`}>Notes</Label>
+        <Textarea
+          id={`${idPrefix}notes`}
+          name="notes"
+          placeholder="Optional"
+          rows={2}
+          className="rounded-2xl"
+        />
       </div>
 
       {error && <p className="text-sm text-destructive">{error}</p>}
 
       <Button type="submit" disabled={pending} className="mt-1 h-11 rounded-2xl text-base">
-        {pending ? "Logging…" : "Log set"}
+        {pending ? "Logging…" : isMax ? "Log max" : "Log set"}
       </Button>
     </form>
   );

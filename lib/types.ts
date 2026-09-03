@@ -22,6 +22,7 @@ export interface PersonalRecord {
   weight_kg: number | null;
   reps: number | null;
   duration_seconds: number | null;
+  is_max: boolean;
   performed_at: string;
   notes: string | null;
   created_at: string;

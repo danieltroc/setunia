@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { formatDate, formatDuration } from "@/lib/format";
 import type { Exercise, PersonalRecord } from "@/lib/types";
+import { ExerciseTabs } from "./exercise-tabs";
 import { LogSetForm } from "./log-set-form";
 import { ProgressChart } from "./progress-chart";
 import { RecordHistory } from "./record-history";
@@ -32,14 +33,12 @@ export default async function ExerciseDetailPage({
     .order("performed_at", { ascending: false })) as { data: PersonalRecord[] | null };
 
   const history = records ?? [];
-  const best = history.reduce<PersonalRecord | null>((acc, record) => {
+  const isDuration = exercise.unit_type === "duration";
+  const bestPool = isDuration ? history : history.filter((r) => r.is_max);
+  const best = bestPool.reduce<PersonalRecord | null>((acc, record) => {
     if (!acc) return record;
-    const accValue =
-      exercise.unit_type === "duration" ? acc.duration_seconds ?? 0 : acc.weight_kg ?? 0;
-    const recordValue =
-      exercise.unit_type === "duration"
-        ? record.duration_seconds ?? 0
-        : record.weight_kg ?? 0;
+    const accValue = isDuration ? acc.duration_seconds ?? 0 : acc.weight_kg ?? 0;
+    const recordValue = isDuration ? record.duration_seconds ?? 0 : record.weight_kg ?? 0;
     return recordValue > accValue ? record : acc;
   }, null);
 
@@ -56,14 +55,10 @@ export default async function ExerciseDetailPage({
         {best ? (
           <>
             <p className="text-6xl font-bold tracking-tight tabular-nums">
-              {exercise.unit_type === "duration"
-                ? formatDuration(best.duration_seconds ?? 0)
-                : best.weight_kg}
+              {isDuration ? formatDuration(best.duration_seconds ?? 0) : best.weight_kg}
             </p>
             <p className="mt-1 text-sm text-muted-foreground">
-              {exercise.unit_type === "duration"
-                ? "personal best"
-                : `kg${best.reps ? ` × ${best.reps} reps` : ""} · personal best`}
+              {isDuration ? "personal best" : "kg · personal best"}
             </p>
             <p className="mt-3 text-xs text-muted-foreground">
               on {formatDate(best.performed_at)}
@@ -76,17 +71,21 @@ export default async function ExerciseDetailPage({
         )}
       </div>
 
-      <LogSetForm exerciseId={exercise.id} unitType={exercise.unit_type} />
-
-      {history.length > 1 && (
-        <ProgressChart records={history} unitType={exercise.unit_type} />
+      {isDuration ? (
+        <>
+          <LogSetForm exerciseId={exercise.id} unitType={exercise.unit_type} />
+          {history.length > 1 && (
+            <ProgressChart records={history} unitType={exercise.unit_type} />
+          )}
+          <RecordHistory records={history} unitType={exercise.unit_type} exerciseId={exercise.id} />
+        </>
+      ) : (
+        <ExerciseTabs
+          exerciseId={exercise.id}
+          maxRecords={history.filter((r) => r.is_max)}
+          repsRecords={history.filter((r) => !r.is_max)}
+        />
       )}
-
-      <RecordHistory
-        records={history}
-        unitType={exercise.unit_type}
-        exerciseId={exercise.id}
-      />
     </div>
   );
 }

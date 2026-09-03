@@ -80,13 +80,19 @@ export async function logSet(formData: FormData): Promise<ActionResult> {
     }
     record.duration_seconds = totalSeconds;
   } else {
+    const isMax = formData.get("is_max") === "true";
     const weight = Number(formData.get("weight_kg"));
-    const reps = Number(formData.get("reps"));
     if (!weight || weight <= 0) {
       return { error: "Enter a weight greater than zero." };
     }
     record.weight_kg = weight;
-    record.reps = reps > 0 ? Math.round(reps) : null;
+    record.is_max = isMax;
+    if (isMax) {
+      record.reps = null;
+    } else {
+      const reps = Number(formData.get("reps"));
+      record.reps = reps > 0 ? Math.round(reps) : null;
+    }
   }
 
   const { error } = await supabase.from("personal_records").insert(record);

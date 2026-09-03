@@ -48,6 +48,7 @@ create table if not exists public.personal_records (
   weight_kg numeric(6, 2),
   reps int,
   duration_seconds int,
+  is_max boolean not null default false,
   performed_at date not null default current_date,
   notes text,
   created_at timestamptz not null default now(),
@@ -55,6 +56,17 @@ create table if not exists public.personal_records (
     weight_kg is not null or duration_seconds is not null
   )
 );
+
+-- Guard for re-running this file against a project that already has the
+-- table without this column.
+alter table public.personal_records
+  add column if not exists is_max boolean not null default false;
+
+-- A single-rep entry is functionally a max attempt; backfill so existing
+-- data keeps showing up as a Personal Best after the Max/Reps split.
+update public.personal_records
+  set is_max = true
+  where is_max = false and (reps is null or reps = 1) and weight_kg is not null;
 
 create index if not exists personal_records_user_exercise_idx
   on public.personal_records (user_id, exercise_id);
@@ -70,6 +82,7 @@ create or replace view public.personal_bests
   with (security_invoker = true) as
 select distinct on (user_id, exercise_id) *
 from public.personal_records
+where is_max = true or duration_seconds is not null
 order by
   user_id,
   exercise_id,
