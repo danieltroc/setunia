@@ -46,7 +46,7 @@ export function LogSetForm({
     <form
       ref={formRef}
       action={handleSubmit}
-      className="flex flex-col gap-4 rounded-3xl border border-border bg-card p-5"
+      className="flex flex-col gap-4 rounded-lg border border-border bg-card p-5"
     >
       <p className="text-sm font-semibold">
         {isMax ? "Log a max attempt" : "Log a set"}
@@ -66,7 +66,6 @@ export function LogSetForm({
               min={0}
               step={1}
               defaultValue={0}
-              className="rounded-2xl"
             />
           </div>
           <div className="flex flex-1 flex-col gap-2">
@@ -79,7 +78,6 @@ export function LogSetForm({
               max={59}
               step={1}
               defaultValue={0}
-              className="rounded-2xl"
             />
           </div>
         </div>
@@ -94,7 +92,6 @@ export function LogSetForm({
               min={0}
               step={0.5}
               required
-              className="rounded-2xl"
             />
           </div>
           {!isMax && (
@@ -108,7 +105,6 @@ export function LogSetForm({
                 step={1}
                 placeholder="e.g. 8"
                 required
-                className="rounded-2xl"
               />
             </div>
           )}
@@ -123,24 +119,17 @@ export function LogSetForm({
           type="date"
           defaultValue={today()}
           required
-          className="rounded-2xl"
         />
       </div>
 
       <div className="flex flex-col gap-2">
         <Label htmlFor={`${idPrefix}notes`}>Notes</Label>
-        <Textarea
-          id={`${idPrefix}notes`}
-          name="notes"
-          placeholder="Optional"
-          rows={2}
-          className="rounded-2xl"
-        />
+        <Textarea id={`${idPrefix}notes`} name="notes" placeholder="Optional" rows={2} />
       </div>
 
       {error && <p className="text-sm text-destructive">{error}</p>}
 
-      <Button type="submit" disabled={pending} className="mt-1 h-11 rounded-2xl text-base">
+      <Button type="submit" disabled={pending} className="mt-1 h-11 text-base">
         {pending ? "Logging…" : isMax ? "Log max" : "Log set"}
       </Button>
     </form>

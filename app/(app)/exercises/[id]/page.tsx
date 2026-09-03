@@ -51,7 +51,7 @@ export default async function ExerciseDetailPage({
         )}
       </div>
 
-      <div className="rounded-3xl border border-border bg-gradient-to-b from-primary/10 to-card px-6 py-8 text-center">
+      <div className="rounded-lg border border-border bg-gradient-to-b from-primary/10 to-card px-6 py-8 text-center">
         {best ? (
           <>
             <p className="text-6xl font-bold tracking-tight tabular-nums">

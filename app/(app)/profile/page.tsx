@@ -21,7 +21,7 @@ export default async function ProfilePage() {
     <div className="flex flex-col gap-8">
       <h1 className="text-3xl font-bold tracking-tight">Profile</h1>
 
-      <div className="rounded-3xl border border-border bg-card p-5">
+      <div className="rounded-lg border border-border bg-card p-5">
         <ProfileForm
           profile={
             profile ?? {
@@ -38,7 +38,7 @@ export default async function ProfilePage() {
       <div className="flex flex-col gap-3">
         <Link
           href="/feedback"
-          className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3.5 transition-colors active:bg-secondary"
+          className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3.5 transition-colors active:bg-secondary"
         >
           <MessageCircle className="h-4 w-4 text-muted-foreground" />
           <span className="flex-1 text-sm font-medium">Send feedback</span>

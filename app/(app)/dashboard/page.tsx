@@ -28,7 +28,7 @@ export default async function DashboardPage() {
         <h1 className="text-3xl font-bold tracking-tight">Your lifts</h1>
         <Link
           href="/exercises"
-          className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground"
+          className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground"
         >
           <Plus className="h-5 w-5" />
         </Link>
@@ -50,7 +50,7 @@ export default async function DashboardPage() {
               <Link
                 key={exercise.id}
                 href={`/exercises/${exercise.id}`}
-                className="rounded-3xl border border-border bg-card px-5 py-4 transition-colors active:bg-secondary"
+                className="rounded-lg border border-border bg-card px-5 py-4 transition-colors active:bg-secondary"
               >
                 <div className="flex items-center justify-between gap-2">
                   <p className="text-sm font-medium text-muted-foreground">

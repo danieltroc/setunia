@@ -69,7 +69,7 @@ export function ProfileForm({
 
       <div className="flex flex-col gap-2">
         <Label htmlFor="email">Email</Label>
-        <Input id="email" type="email" value={email} disabled className="rounded-2xl" />
+        <Input id="email" type="email" value={email} disabled />
       </div>
 
       <div className="flex flex-col gap-2">
@@ -79,13 +79,12 @@ export function ProfileForm({
           name="display_name"
           value={displayName}
           onChange={(e) => setDisplayName(e.target.value)}
-          className="rounded-2xl"
         />
       </div>
 
       {error && <p className="text-sm text-destructive">{error}</p>}
 
-      <Button type="submit" disabled={pending} className="h-11 rounded-2xl text-base">
+      <Button type="submit" disabled={pending} className="h-11 text-base">
         {pending ? "Saving…" : "Save changes"}
       </Button>
     </form>

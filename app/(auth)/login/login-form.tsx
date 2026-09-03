@@ -47,7 +47,6 @@ export function LoginForm() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="rounded-2xl"
         />
       </div>
       <div className="flex flex-col gap-2">
@@ -59,11 +58,10 @@ export function LoginForm() {
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="rounded-2xl"
         />
       </div>
       {error && <p className="text-sm text-destructive">{error}</p>}
-      <Button type="submit" disabled={loading} className="h-11 w-full rounded-2xl text-base">
+      <Button type="submit" disabled={loading} className="h-11 w-full text-base">
         {loading ? "Logging in…" : "Log in"}
       </Button>
     </form>

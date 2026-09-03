@@ -22,14 +22,14 @@ export default async function ExercisesPage() {
         <AddExerciseDialog />
       </div>
 
-      <div className="flex flex-col divide-y divide-border overflow-hidden rounded-3xl border border-border bg-card">
+      <div className="flex flex-col divide-y divide-border overflow-hidden rounded-lg border border-border bg-card">
         {(exercises ?? []).map((exercise) => (
           <Link
             key={exercise.id}
             href={`/exercises/${exercise.id}`}
             className="flex items-center gap-3 px-5 py-4 transition-colors active:bg-secondary"
           >
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary text-sm font-semibold">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-secondary text-sm font-semibold">
               {exercise.unit_type === "duration" ? (
                 <Timer className="h-4 w-4 text-muted-foreground" />
               ) : (

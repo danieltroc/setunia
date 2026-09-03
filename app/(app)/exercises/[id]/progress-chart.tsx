@@ -27,7 +27,7 @@ export function ProgressChart({
     }));
 
   return (
-    <div className="rounded-3xl border border-border bg-card p-5">
+    <div className="rounded-lg border border-border bg-card p-5">
       <p className="mb-2 text-sm font-semibold">Progress</p>
       <div className="h-56 w-full">
         <ResponsiveContainer width="100%" height="100%">

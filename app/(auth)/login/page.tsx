@@ -3,7 +3,7 @@ import { LoginForm } from "./login-form";
 
 export default function LoginPage() {
   return (
-    <div className="rounded-3xl border border-border bg-card p-6">
+    <div className="rounded-lg border border-border bg-card p-6">
       <h2 className="text-xl font-bold tracking-tight">Log in</h2>
       <p className="mt-1 text-sm text-muted-foreground">
         Welcome back. Log in with your email to keep tracking your lifts.

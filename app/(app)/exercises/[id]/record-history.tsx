@@ -60,7 +60,7 @@ export function RecordHistory({
       aria-label="Delete entry"
       disabled={pending}
       onClick={() => handleDelete(recordId)}
-      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary hover:text-destructive disabled:opacity-50"
+      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-secondary hover:text-destructive disabled:opacity-50"
     >
       <X className="h-4 w-4" />
     </button>
@@ -91,7 +91,7 @@ export function RecordHistory({
                   {group.totalKg} kg lifted that day
                 </span>
               </div>
-              <div className="flex flex-col divide-y divide-border overflow-hidden rounded-3xl border border-border bg-card">
+              <div className="flex flex-col divide-y divide-border overflow-hidden rounded-lg border border-border bg-card">
                 {group.records.map((record) => (
                   <div key={record.id} className="flex items-center gap-3 px-5 py-4">
                     <div className="flex flex-1 flex-col">
@@ -116,7 +116,7 @@ export function RecordHistory({
   return (
     <div className="flex flex-col gap-3">
       <p className="text-sm font-semibold">History</p>
-      <div className="flex flex-col divide-y divide-border overflow-hidden rounded-3xl border border-border bg-card">
+      <div className="flex flex-col divide-y divide-border overflow-hidden rounded-lg border border-border bg-card">
         {records.map((record) => (
           <div key={record.id} className="flex items-center gap-3 px-5 py-4">
             <div className="flex flex-1 flex-col">
